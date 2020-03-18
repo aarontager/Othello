@@ -79,9 +79,21 @@ public class OthelloGUI extends JFrame {
 
     private void updateBoard(CellState state) {
         setColors();
+
+        if(game instanceof OthelloModelOnePlayer)
+            SwingUtilities.invokeLater(() -> checkComputerMove(state));
+    }
+
+    private void checkComputerMove(CellState state) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if(!game.playerMove(state)) {
-            setColors();
             turn = (turn == CellState.WHITE) ? CellState.BLACK : CellState.WHITE;
+            setColors();
         }
 
         if(!checkGameOver()) {
@@ -90,9 +102,6 @@ public class OthelloGUI extends JFrame {
                 state = turn;
             }
         }
-        String turnText;
-        turnText = (turn == CellState.BLACK) ? "Black's turn!" : "White's turn!";
-        bottom.setText(turnText);
     }
 
     private void setColors() {
@@ -101,6 +110,9 @@ public class OthelloGUI extends JFrame {
                 buttonArray[i][j].setBackground(game.getCell(i, j).getColor());
             }
         }
+        String turnText;
+        turnText = (turn == CellState.BLACK) ? "Black's turn!" : "White's turn!";
+        bottom.setText(turnText);
     }
 
     private boolean checkGameOver() {
@@ -112,8 +124,8 @@ public class OthelloGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        OthelloModelInterface run = new OthelloModelOnePlayer(CellState.WHITE);
-//        OthelloModelInterface run = new OthelloModelTwoPlayer();
+//        OthelloModelInterface run = new OthelloModelOnePlayer(CellState.WHITE);
+        OthelloModelInterface run = new OthelloModelTwoPlayer();
         new OthelloGUI(run);
     }
 }
